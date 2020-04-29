@@ -1,3 +1,3 @@
 # Interaction Design BA6
 
-[KNN classification](/learning_ml/MobileNet_KNN/index.html)
+[KNN classification](samuelvontucher.github.io/UXD-BA6/learning_ml/MobileNet_KNN/)
