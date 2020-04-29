@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNN</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+    <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+    <style>
+        html {
+            font-family: monospace;
+        }
+
+        .description {
+            padding-bottom: 1rem;
+        }
+
+        .container {
+            width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="description">
+            <h2>Train model:</h2>
+            <p>Press the keys on the keyboard to train</p>
+            <ul>
+                <li>"l" for left</li>
+                <li>"r" for right</li>
+                <li>"u" for up</li>
+                <li>"d" for down</li>
+            </ul>
+            <p>Please open the Browser console</p>
+            <button id="save_button">Save model</button>
+
+        </div>
+        <div id="canvas_container"></div>
+    </div>
+
+    <script src="sketch.js"></script>
+</body>
+
+</html>
