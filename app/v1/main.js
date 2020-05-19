@@ -34,9 +34,13 @@ function handleFile(file) {
     print(file);
     statusText.innerHTML = "image loaded!";
     if (file.type === 'image') {
-      inputImage = createImg(file.data, '');
-      inputImage.hide();
+        inputImage = createImg(file.data, '');
+        inputImage.hide();
+        fileInput = createImg(file.data, '');
+        fileInput.style("width", "100px");
+        fileInput.style("height", "100px");
+        fileInput.parent("display_input");
     } else {
-      inputImage = null;
+        inputImage = null;
     }
 }
