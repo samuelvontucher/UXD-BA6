@@ -1,6 +1,32 @@
 // input colors (from real paint)
 let colors = {
+    tree: {
+        light: "#bc8c64",
+        dark: "#2c2211"
+    },
+    sky: {
+        light: "#a5d9e2",
+        dark: "#2796c4"
+    },
+    grass: {
+        light: "#c5e97e",
+        dark: "#336e1a"
+    },
+    river: {
+        light: "#02070d",
+        dark: "#02070d"
+    }
+    
 }
+// tree, sky, grass, river
+const realColors = [colors.tree.light, colors.tree.dark, colors.sky.light, colors.sky.dark, colors.grass.light, colors.grass.dark,
+    colors.river.light, colors.river.dark];
+const colorClassifier = new ColorClassifier(realColors);
+//const color = colorClassifier.classify("color to classify");
+
+
+
+
 // label colors from runway
 let labelColors = {
     sky : {
@@ -68,29 +94,24 @@ function analysePixels() {
         let g = img.pixels[i + 1];
         let b = img.pixels[i + 2];
         let a = img.pixels[i + 3];
-        // river
-        if((r <=40 && r >= 0) && (g <=45 && g >= 5) && (b <=45 && b >= 0)) {
-            img.pixels[i] = labelColors.river.r;
-            img.pixels[i + 1] = labelColors.river.g;
-            img.pixels[i + 2] = labelColors.river.b;
-        }
-        //grass
-        else if((r <=200 && r >= 50) && (g <=255 && g >= 108) && (b <=145 && b >= 25)) {
-            img.pixels[i] = labelColors.grass.r;
-            img.pixels[i + 1] = labelColors.grass.g;
-            img.pixels[i + 2] = labelColors.grass.b;
-        }
-        // tree
-        else if((r <=240 && r >= 40) && (g <=200 && g >= 25) && (b <=160 && b >= 15)) {
+        let c = colorClassifier.classify({r: r, g: g, b: b}, "hex");
+        if(c === colors.tree.light || c === colors.tree.dark) {
             img.pixels[i] = labelColors.tree.r;
             img.pixels[i + 1] = labelColors.tree.g;
             img.pixels[i + 2] = labelColors.tree.b;
         }
-        //sky
-        else if(b <=255 && b >= 150) {
+        else if (c === colors.sky.light || c === colors.sky.dark) {
             img.pixels[i] = labelColors.sky.r;
             img.pixels[i + 1] = labelColors.sky.g;
             img.pixels[i + 2] = labelColors.sky.b;
+        } else if (c === colors.grass.light || c === colors.grass.dark) {
+            img.pixels[i] = labelColors.grass.r;
+            img.pixels[i + 1] = labelColors.grass.g;
+            img.pixels[i + 2] = labelColors.grass.b;
+        }else if (c === colors.river.light || c === colors.river.dark) {
+            img.pixels[i] = labelColors.river.r;
+            img.pixels[i + 1] = labelColors.river.g;
+            img.pixels[i + 2] = labelColors.river.b;
         }
     }
     img.updatePixels();
