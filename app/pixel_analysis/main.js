@@ -55,6 +55,8 @@ let canvas;
 let inputImg;
 let statusText;
 
+let button;
+
 let backgroundWorker = new Worker("analyse.js");
 
 function setup() {
@@ -62,6 +64,8 @@ function setup() {
     canvas.parent("canvas_container");
     statusText = document.querySelector("#status_text");
     statusText.textContent = ":P";
+    button = createButton("Analyse Image");
+    button.mousePressed(sendToWorker);
     canvas.drop(handleFile);
     imageMode(CENTER);
 }
@@ -73,13 +77,28 @@ function draw() {
     if(img) {
         image(img, width/2, height/2);
     }
+    ellipse(mouseX, mouseY, 40, 40);
+    
 }
 
-function mousePressed() {
-    let mes = "hello";
-    backgroundWorker.postMessage(mes);
-    console.log("Message posted to worker");
-  }
+function sendToWorker() {
+    if(img != null) {
+        img.loadPixels();
+        let data = [img.pixels, img.width, img.height];
+        backgroundWorker.postMessage(data);
+        console.log("Message posted to worker");
+    } else {
+        console.log("Image not loaded");
+    }
+
+}
+
+backgroundWorker.onmessage = (e) => {
+    console.log(e.data);
+    img.loadPixels();
+    img.pixels = e.data;
+    img.updatePixels();
+}
 
 function handleFile(file) {
     print(file);
@@ -97,10 +116,10 @@ function imageLoaded() {
     statusText.textContent = "Image Loaded";
     resizeCanvas(img.width, img.height);
     image(img, width/2, height/2);
-    analysePixels();
+    //analysePixels();
 }
 
-function analysePixels() {
+/*function analysePixels() {
     img.loadPixels();
     print(img.width);
     for (let i = 0; i < 4 * (img.width * img.height); i += 4) {
@@ -129,4 +148,4 @@ function analysePixels() {
     }
     img.updatePixels();
     statusText.textContent = "Pixels changed";
-}
+}*/
