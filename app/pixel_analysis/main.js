@@ -55,6 +55,8 @@ let canvas;
 let inputImg;
 let statusText;
 
+let backgroundWorker = new Worker("analyse.js");
+
 function setup() {
     canvas = createCanvas(600, 600);
     canvas.parent("canvas_container");
@@ -73,6 +75,12 @@ function draw() {
     }
 }
 
+function mousePressed() {
+    let mes = "hello";
+    backgroundWorker.postMessage(mes);
+    console.log("Message posted to worker");
+  }
+
 function handleFile(file) {
     print(file);
     if (file.type === 'image') {
@@ -88,6 +96,7 @@ function imageLoaded() {
     print("Image loaded");
     statusText.textContent = "Image Loaded";
     resizeCanvas(img.width, img.height);
+    image(img, width/2, height/2);
     analysePixels();
 }
 
