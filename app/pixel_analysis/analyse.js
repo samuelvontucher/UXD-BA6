@@ -1,4 +1,5 @@
 importScripts("../../libs/color-classifier/color-classifier.min.js");    
+// Light and dark variants of the colors from real paint
 let colors = {
     tree: {
         light: "#bc8c64",
@@ -53,12 +54,15 @@ onmessage = (info) => {
     h = info.data[2];
     console.log(w);
     console.log('Message received from main script');
+    //loop through every pixel in the array
     for (let i = 0; i < 4 * (w * h); i += 4) {
         let r = pixels[i];
         let g = pixels[i + 1];
         let b = pixels[i + 2];
         let a = pixels[i + 3];
+        // classify the color of the pixel 
         let c = colorClassifier.classify({r: r, g: g, b: b}, "hex");
+        // change the color of the pixel to the correct label color
         if(c === colors.tree.light || c === colors.tree.dark) {
             pixels[i] = labelColors.tree.r;
             pixels[i + 1] = labelColors.tree.g;
@@ -78,5 +82,6 @@ onmessage = (info) => {
         }
     }
     console.log("finished analysing");
+    //send the new pixel array back to main.js
     postMessage(pixels);
 }
