@@ -1,55 +1,3 @@
-// input colors (from real paint)
-let colors = {
-    tree: {
-        light: "#bc8c64",
-        dark: "#2c2211"
-    },
-    sky: {
-        light: "#a5d9e2",
-        dark: "#2796c4"
-    },
-    grass: {
-        light: "#c5e97e",
-        dark: "#336e1a"
-    },
-    river: {
-        light: "#02070d",
-        dark: "#02070d"
-    }
-    
-}
-// tree, sky, grass, river
-const realColors = [colors.tree.light, colors.tree.dark, colors.sky.light, colors.sky.dark, colors.grass.light, colors.grass.dark,
-    colors.river.light, colors.river.dark];
-const colorClassifier = new ColorClassifier(realColors);
-//const color = colorClassifier.classify("color to classify");
-
-
-
-
-// label colors from runway
-let labelColors = {
-    sky : {
-        r: 90,
-        g: 219, 
-        b: 255,
-    },
-    tree : {
-        r: 140,
-        g: 104,
-        b: 47
-    },
-    grass: {
-        r: 29,
-        g: 195,
-        b: 49
-    },
-    river: {
-        r: 0,
-        g: 57, 
-        b:150
-    }
-}
 let img = null;
 let canvas;
 let inputImg;
@@ -96,8 +44,14 @@ function sendToWorker() {
 backgroundWorker.onmessage = (e) => {
     console.log(e.data);
     img.loadPixels();
-    img.pixels = e.data;
+    console.log(img.pixels);
+    for (let i = 0; i < e.data.length; i++) {
+       img.pixels[i] = e.data[i];
+    }
+    console.log(img.pixels);
     img.updatePixels();
+    console.log(img.pixels);
+    console.log("image pixels updated");
 }
 
 function handleFile(file) {
