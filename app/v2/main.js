@@ -2,7 +2,7 @@ const url = "http://localhost:8000/query";
 
 let canvas;
 let statusText;
-let generateBtn;
+let cheatBtn;
 let sendBtn;
 
 let inputImage;
@@ -11,6 +11,8 @@ let fileInput;
 let img;
 
 let backgroundWorker = new Worker("analyse.js");
+let pixelsChanged = false;
+let pictureGenerated = false;
 
 function setup() {
     canvas = createCanvas(800, 600);
@@ -29,25 +31,71 @@ function draw() {
     if(img) {
         image(img, width/2, height/2);
     }
-}
-
-
-function setUpDOM() {
-    statusText = document.querySelector("#image_status");
-    sendBtn = createButton("Send Image");
-    sendBtn.mousePressed(sendImage);
-    inputImage = document.querySelector("#input_image");
+    ellipse(mouseX, mouseY, 40, 40);
 }
 
 function handleFile(file) {
     print(file);
-    statusText.innerHTML = "image loaded!";
     if (file.type === 'image') {
-        img = loadImage(file.data);
+        img = loadImage(file.data, imageLoaded);
         inputImage.src = file.data;
+        pixelsChanged = false;
+        pictureGenerated = false;
     } else {
         img = null;
     }
+}
+
+function imageLoaded() {
+    print("Image loaded");
+    statusText.textContent = "Image Loaded";
+    resizeCanvas(img.width, img.height);
+    image(img, width/2, height/2);
+}
+
+function setUpDOM() {
+    statusText = document.querySelector("#image_status");
+    sendBtn = createButton("Send Image");
+    sendBtn.mousePressed(generateImage);
+    cheatBtn = createButton("Blur Image");
+    cheatBtn.mousePressed(cheatFun);
+    inputImage = document.querySelector("#input_image");
+}
+
+function generateImage() {
+    sendToWorker();
+}
+
+function cheatFun () {
+    print("Image Filter");
+    img.filter(BLUR, 1.15);
+}
+
+function sendToWorker() {
+    if(img != null) {
+        img.loadPixels();
+        let data = [img.pixels, img.width, img.height];
+        backgroundWorker.postMessage(data);
+        console.log("Message posted to worker");
+    } else {
+        console.log("Image not loaded");
+    }
+
+}
+
+backgroundWorker.onmessage = (e) => {
+    console.log(e.data);
+    img.loadPixels();
+    console.log(img.pixels);
+    for (let i = 0; i < e.data.length; i++) {
+       img.pixels[i] = e.data[i];
+    }
+    console.log(img.pixels);
+    img.updatePixels();
+    console.log(img.pixels);
+    console.log("image pixels updated");
+    pixelsChanged = true;
+    sendImage();
 }
 
 //---
@@ -74,13 +122,14 @@ function sendImage() {
             } = outputs;
             print("Data from Runway")
             print(outputs);
-            generateImage(outputs);
+            pictureGenerated = true;
+            getImage(outputs);
             // use the outputs in your project
         });
 }
 //--
 
-function generateImage(data) {
+function getImage(data) {
     // create a new image based on the data from runway
     if(data) {
         print(data.output);
