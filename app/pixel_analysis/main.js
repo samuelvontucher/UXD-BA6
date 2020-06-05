@@ -72,34 +72,3 @@ function imageLoaded() {
     image(img, width/2, height/2);
     //analysePixels();
 }
-
-/*function analysePixels() {
-    img.loadPixels();
-    print(img.width);
-    for (let i = 0; i < 4 * (img.width * img.height); i += 4) {
-        let r = img.pixels[i];
-        let g = img.pixels[i + 1];
-        let b = img.pixels[i + 2];
-        let a = img.pixels[i + 3];
-        let c = colorClassifier.classify({r: r, g: g, b: b}, "hex");
-        if(c === colors.tree.light || c === colors.tree.dark) {
-            img.pixels[i] = labelColors.tree.r;
-            img.pixels[i + 1] = labelColors.tree.g;
-            img.pixels[i + 2] = labelColors.tree.b;
-        } else if (c === colors.sky.light || c === colors.sky.dark) {
-            img.pixels[i] = labelColors.sky.r;
-            img.pixels[i + 1] = labelColors.sky.g;
-            img.pixels[i + 2] = labelColors.sky.b;
-        } else if (c === colors.grass.light || c === colors.grass.dark) {
-            img.pixels[i] = labelColors.grass.r;
-            img.pixels[i + 1] = labelColors.grass.g;
-            img.pixels[i + 2] = labelColors.grass.b;
-        } else if (c === colors.river.light || c === colors.river.dark) {
-            img.pixels[i] = labelColors.river.r;
-            img.pixels[i + 1] = labelColors.river.g;
-            img.pixels[i + 2] = labelColors.river.b;
-        }
-    }
-    img.updatePixels();
-    statusText.textContent = "Pixels changed";
-}*/
