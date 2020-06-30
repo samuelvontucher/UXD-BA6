@@ -1,4 +1,4 @@
-importScripts("../../libs/color-classifier/color-classifier.min.js");    
+importScripts("../../libs/color-classifier/color-classifier.min.js");
 // Light and dark variants of the colors from real paint
 let colors = {
     tree: {
@@ -17,21 +17,22 @@ let colors = {
         light: "#02070d",
         dark: "#02070d"
     }
-    
+
 }
 // tree, sky, grass, river
 const realColors = [colors.tree.light, colors.tree.dark, colors.sky.light, colors.sky.dark, colors.grass.light, colors.grass.dark,
-    colors.river.light, colors.river.dark];
+    colors.river.light, colors.river.dark
+];
 const colorClassifier = new ColorClassifier(realColors);
 
 // label colors from runway
 let labelColors = {
-    sky : {
+    sky: {
         r: 90,
-        g: 219, 
+        g: 219,
         b: 255,
     },
-    tree : {
+    tree: {
         r: 140,
         g: 104,
         b: 47
@@ -43,8 +44,8 @@ let labelColors = {
     },
     river: {
         r: 0,
-        g: 57, 
-        b:150
+        g: 57,
+        b: 150
     }
 }
 
@@ -52,18 +53,25 @@ onmessage = (info) => {
     pixels = info.data[0];
     w = info.data[1];
     h = info.data[2];
+    start = info.data[3];
+
     console.log(w);
     console.log('Message received from main script');
     //loop through every pixel in the array
     for (let i = 0; i < 4 * (w * h); i += 4) {
+
         let r = pixels[i];
         let g = pixels[i + 1];
         let b = pixels[i + 2];
         let a = pixels[i + 3];
         // classify the color of the pixel 
-        let c = colorClassifier.classify({r: r, g: g, b: b}, "hex");
+        let c = colorClassifier.classify({
+            r: r,
+            g: g,
+            b: b
+        }, "hex");
         // change the color of the pixel to the correct label color
-        if(c === colors.tree.light || c === colors.tree.dark) {
+        if (c === colors.tree.light || c === colors.tree.dark) {
             pixels[i] = labelColors.tree.r;
             pixels[i + 1] = labelColors.tree.g;
             pixels[i + 2] = labelColors.tree.b;
